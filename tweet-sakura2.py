@@ -28,7 +28,7 @@ AFFILIATEID = "deeei-999"
 KEYWORD = "%E7%B4%97%E5%80%89%E3%81%BE%E3%81%AA&rlz=1C5CHFA_enJP684JP686&oq=%E7%B4%97%E5%80%89%E3%81%BE%E3%81%AA"
 
 
-html = urllib.request.urlopen("https://api.dmm.com/affiliate/v3/ItemList?api_id=" + APPID + "&affiliate_id=" + AFFILIATEID + "%20&site=DMM.R18&service=digital&floor=videoa&hits=20&sort=rank&keyword=" + KEYWORD + "&output=xml")
+html = urllib.request.urlopen("https://api.dmm.com/affiliate/v3/ItemList?api_id=" + APPID + "&affiliate_id=" + AFFILIATEID + "%20&site=DMM.R18&service=digital&floor=videoa&hits=20&sort=date&keyword=" + KEYWORD + "&output=xml")
 soup = BeautifulSoup(html, "html5lib")
 
 # print("所得したデータを表示します")
@@ -41,8 +41,6 @@ print("取得したitems数:{}".format(len(items.item)))
 
 k = 0
 for item in items:
-
-    # print("女優：{}".format(act))
     item_list =[]
     title = item.title.string
     title = (title[:40] + "..動画はこちら→")if len(title) > 75 else title #タイトル４０字過ぎたら省略
@@ -52,8 +50,6 @@ for item in items:
     try:
         videoURL = item.samplemovieurl.size_476_306.string
         item_list.append(videoURL)
-        review = item.review.average.string
-        item_list.append(review)
         dict[k] = item_list
         k = k + 1
     except :
@@ -76,8 +72,8 @@ try:
     nTitle = dict[n][0]
     nPhotoURL = dict[n][1]
     nVideoURL = dict[n][2]
-    nReview = dict[n][3]
-    content = nTitle + " レビュー平均：" + nReview + "|" + nVideoURL + " ＃紗倉まな"
+
+    content = nTitle + "|" + nVideoURL
     print("ツイート内容：{}".format(content))
 
     request = requests.get(nPhotoURL, stream=True)
